@@ -1,0 +1,97 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://World.gd" type="Script" id=1]
+[ext_resource path="res://Hitsound.ogg" type="AudioStream" id=2]
+[ext_resource path="res://bonusHit.ogg" type="AudioStream" id=3]
+[ext_resource path="res://player.gd" type="Script" id=4]
+[ext_resource path="res://leaf 1.png" type="Texture" id=5]
+[ext_resource path="res://bg3.png" type="Texture" id=6]
+[ext_resource path="res://bgbuild.png" type="Texture" id=7]
+
+[sub_resource type="CapsuleShape2D" id=1]
+
+[node name="World" type="Node"]
+script = ExtResource( 1 )
+
+[node name="hitSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+
+[node name="bonusSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+
+[node name="spawnEnemyTimer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
+[node name="Player" type="KinematicBody2D" parent="."]
+script = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="Player"]
+texture = ExtResource( 5 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Player"]
+scale = Vector2( 3, 0.5 )
+shape = SubResource( 1 )
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+offset = Vector2( 800, 100 )
+current = true
+zoom = Vector2( 2, 2 )
+
+[node name="ParallaxSimulation" type="ParallaxBackground" parent="."]
+scroll_ignore_camera_zoom = true
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxSimulation"]
+position = Vector2( -32, -32 )
+z_index = 1
+motion_scale = Vector2( 0.1, 0.1 )
+motion_mirroring = Vector2( 3710, 1980 )
+
+[node name="Sprite2" type="Sprite" parent="ParallaxSimulation/ParallaxLayer"]
+modulate = Color( 0.6, 0.537255, 0.537255, 1 )
+z_index = -1
+texture = ExtResource( 6 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 3710, 1980 )
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxSimulation"]
+z_index = 1
+motion_mirroring = Vector2( 3000, 1655 )
+
+[node name="Sprite2" type="Sprite" parent="ParallaxSimulation/ParallaxLayer2"]
+position = Vector2( 192, 192 )
+scale = Vector2( 1.50054, 1.53434 )
+z_index = -1
+texture = ExtResource( 7 )
+region_rect = Rect2( 0, 0, 1920, 2160 )
+
+[node name="spawnBonusTimer" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+
+[node name="scoreText" type="Label" parent="."]
+margin_left = 1344.0
+margin_top = -480.0
+margin_right = 1456.0
+margin_bottom = -448.0
+grow_horizontal = 0
+rect_scale = Vector2( 4, 4 )
+
+[node name="dead" type="Label" parent="."]
+margin_left = 608.0
+margin_top = -64.0
+margin_right = 644.0
+margin_bottom = -50.0
+rect_scale = Vector2( 10, 10 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "DEAD"
+percent_visible = 0.0
+
+[node name="healthText" type="Label" parent="."]
+margin_top = 32.0
+margin_right = 160.0
+margin_bottom = 64.0
+rect_scale = Vector2( 4, 4 )
+rect_pivot_offset = Vector2( 59.2929, 166.979 )
+[connection signal="timeout" from="spawnEnemyTimer" to="." method="_on_spawnEnemyTimer_timeout"]
+[connection signal="timeout" from="spawnBonusTimer" to="." method="_on_spawnBonusTimer_timeout"]
